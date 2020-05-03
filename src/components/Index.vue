@@ -42,6 +42,7 @@ export default {
         }
     },
     created() {
+        // let ref = db.collection('smoothies').where('slug', '==', this.$route.params.smoothie_slug)
         db.collection('smoothies').get().then(snapshot => {
             snapshot.forEach(doc => {
                 let smoothie = doc.data();

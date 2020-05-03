@@ -1,7 +1,7 @@
 <template>
 
-    <div class="add-smoothie container">
-        <h2 class="center-align indigo-text">Edit smoothie - <span class="orange-text">{{ smoothie.title }}</span></h2>
+    <div class="edit-smoothie container">
+        <h2 class="center-align indigo-text" v-if="smoothie">Edit smoothie - <span class="orange-text">{{ smoothie.title }}</span></h2>
         <form @submit.prevent="editSmoothie">
             <div class="field title">
                 <label for="title">Smoothie Title</label>
@@ -35,11 +35,8 @@ export default {
     name: 'EditSmoothie',
     data() {
         return {
-            title: null,
             another: null,
-            ingredients: [],
             feedback: null,
-            slug: null,
             smoothie: null,
         }
     },
@@ -47,29 +44,32 @@ export default {
         let smoothie_id = this.$route.params.smoothie_id
         db.collection('smoothies').doc(smoothie_id).get().then((snapshot) => {
             this.smoothie = snapshot.data()
+            this.smoothie.id = snapshot.id
+            console.log(this.smoothie.id)
         }).catch(erro => {
             console.log(err)
         })
     },
     methods: {
         editSmoothie() {
-            if (this.title) {
+            if (this.smoothie.title) {
                 this.feedback = null
                 // Creating a slug
-                this.slug = slugify(this.title, {
+                this.smoothie.slug = slugify(this.smoothie.title, {
                     replacement: '-',
                     remove: /[$*_+~.()'"!\-:@]/g,
                     lower: true
                 })
                 // Adding the smoothie to the database
-                db.collection('smoothies').add({
-                    title: this.title,
-                    slug: this.slug,
-                    ingredients: this.ingredients
+                db.collection('smoothies').doc(this.smoothie.id).update({
+                    title: this.smoothie.title,
+                    slug: this.smoothie.slug,
+                    ingredients: this.smoothie.ingredients
                 }).then(() => {
                     this.$router.push({ name: 'Index' })
                 }).catch(() => {
-                    this.$router.push({ name: 'AddSmoothie'})
+                    console.log("Something happened wrong")
+                    this.$router.push({ name: 'EditSmoothie', smoothie_id: this.smoothie.id, smoothie_slug: this.smoothie.slug})
                 })
             } else {
                 this.feedback = 'Title cannot be empty'
@@ -77,7 +77,7 @@ export default {
         },
         addIng() {
             if (this.another) {
-                this.ingredients.push(this.another)
+                this.smoothie.ingredients.push(this.another)
                 this.another = null
                 this.feedback = null
             } else {
@@ -86,7 +86,7 @@ export default {
         },
         deleteIng(ing) {
             if (ing) {
-                this.ingredients = this.ingredients.filter(ele => {
+                this.smoothie.ingredients = this.smoothie.ingredients.filter(ele => {
                     return ele !== ing
                 })
             }
@@ -97,24 +97,24 @@ export default {
 
 <style>
 
-.add-smoothie {
+.edit-smoothie {
     margin-top: 60px;
     padding: 20px;
     max-width: 500px;
 }
 
-.add-smoothie h2 {
+.edit-smoothie h2 {
     font-size: 2em;
     margin: 20px auto;
 }
 
-.add-smoothie .field {
+.edit-smoothie .field {
     margin: 20px auto;
     position: relative;
 }
 
-.add-smoothie .delete,
-.add-smoothie .add {
+.edit-smoothie .delete,
+.edit-smoothie .add {
     position: absolute;
     right: 0px;
     bottom:20px;
@@ -126,10 +126,10 @@ export default {
     color: #aaa;
 }
 
-.add-smoothie .delete:hover,
-.add-smoothie .delete:active,
-.add-smoothie .add:hover,
-.add-smoothie .add:active {
+.edit-smoothie .delete:hover,
+.edit-smoothie .delete:active,
+.edit-smoothie .add:hover,
+.edit-smoothie .add:active {
     color: #444;
 }
 
