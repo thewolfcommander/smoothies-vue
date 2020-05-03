@@ -65,6 +65,24 @@ export default {
     margin-top: 60px
 }
 
+@media screen and (min-width: 560px) {
+    .index {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 20px;
+        margin-top: 60px
+    }
+}
+
+@media screen and (min-width: 240px) {
+    .index {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-gap: 20px 0;
+        margin-top: 60px
+    }
+}
+
 .index h2 {
     text-align: center;
     margin-top: 0;
