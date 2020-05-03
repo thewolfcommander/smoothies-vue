@@ -3,6 +3,7 @@
         <div class="card" v-for="smoothie in smoothies" :key="smoothie.id">
             <div class="card-content">
                 <i class="material-icons delete" @click="deleteSmoothie(smoothie)">delete</i>
+                
                 <h2 class="card-title indigo-text">
                     {{ smoothie.title }}
                 </h2>
@@ -12,6 +13,11 @@
                     </li>
                 </ul>
             </div>
+            <span class="btn-floating btn-large halfway-fab pink">
+                <router-link :to="{ name: 'EditSmoothie', params: { smoothie_slug: smoothie.slug, smoothie_id: smoothie.id } }">
+                    <i class="material-icons">edit</i>
+                </router-link>
+            </span>
         </div>
     </div>
 </template>
@@ -81,8 +87,19 @@ export default {
     cursor: pointer;
 }
 
+.index .edit {
+    position: absolute;
+    top: 6px;
+    right: 35px;
+    color: #aaa;
+    font-size: 1.4em;
+    cursor: pointer;
+}
+
 .index .delete:hover,
-.index .delete:active {
+.index .delete:active,
+.index .edit:hover,
+.index .edit:active {
     color: #444;
 }
 
