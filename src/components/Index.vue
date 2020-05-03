@@ -65,7 +65,7 @@ export default {
     margin-top: 60px
 }
 
-@media screen and (min-width: 560px) {
+@media screen and (min-width: 560px and max-width: 820px) {
     .index {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -74,7 +74,7 @@ export default {
     }
 }
 
-@media screen and (min-width: 240px) {
+@media screen and (min-width: 240px and max-width: 559px) {
     .index {
         display: grid;
         grid-template-columns: 1fr;
